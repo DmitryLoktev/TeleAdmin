@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kitchen Books</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/table.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/buttons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/modal_window.css') }}">
+
+</head>
+<body>
+  <h1>Kitchen Books</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price (rub.)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in table_data %}
+        <tr>
+          <td>{{ book.id }}</td>
+          <td>{{ book.name }}</td>
+          <td>{{ book.price }}</td>
+          <td>
+            <!-- Добавляем кнопку Edit с вызовом функции JavaScript -->
+            <button class="edit-button" onclick="showEditForm({{ book.id }}, '{{ book.name }}', {{ book.price }})">Edit</button>
+            <button class="delete-button" onclick="deleteBook({{ book.id }})">Delete</button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Модальное окно для редактирования -->
+
+    <div id="editFormModal" style="display: none;">
+      <h2><b>Update Kitchen Menu</b></h2>
+      <form id="editForm">
+        <input type="hidden" id="editId" name="editId">
+        <label for="editName"><b>Name:</b></label><br>
+        <input type="text" id="editName" name="editName"><br>
+        <label for="editPrice"><b>Price:</b></label><br>
+        <input type="text" id="editPrice" name="editPrice"><br><br>
+        <button type="submit">Update</button>
+        <button type="button" class="cancel-button" onclick="closeEditForm()">Cancel</button>
+      </form>
+    </div>
+    <a href="/" class="go-to-main-button">Go to Main</a>
+    <button class="add-dishes-button" onclick="showAddForm()"> + Add Dishes</button>
+
+  <script>
+      // Функция для удаления блюда
+      async function deleteBook(bookId) {
+        try {
+          const response = await fetch(`/kitchen/${bookId}`, {
+            method: 'DELETE'
+          });
+          if (response.ok) {
+            window.location.reload(); // Обновить страницу после успешного удаления
+          } else {
+            console.error('Failed to delete book:', response.status);
+          }
+        } catch (error) {
+          console.error('Error deleting book:', error);
+        }
+      }
+
+      // Функция для отображения модального окна для добавления новых блюд
+      function showAddForm() {
+        clearFormFields();
+        document.getElementById('editFormModal').style.display = 'block';
+      }
+
+      // Функция для отображения модального окна редактирования
+      function showEditForm(id, name, price) {
+        document.getElementById('editId').value = id;
+        document.getElementById('editName').value = name;
+        document.getElementById('editPrice').value = price;
+        document.getElementById('editFormModal').style.display = 'block';
+      }
+
+      // Обработчик события для отправки данных на сервер при редактировании или добавлении
+      document.getElementById('editForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const form = document.getElementById('editForm');
+        const id = form.elements.editId.value;
+        const name = form.elements.editName.value;
+        const price = form.elements.editPrice.value;
+
+        try {
+          const response = await fetch(`/kitchen/${id}?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}`, {
+            method: id ? 'PUT' : 'POST' // Выбор метода в зависимости от наличия ID
+          });
+
+          if (response.ok) {
+            window.location.reload(); // Обновить страницу после успешного добавления/обновления
+          } else {
+            console.error(`Failed to ${id ? 'update' : 'add'} kitchen:`, response.status);
+          }
+        } catch (error) {
+          console.error('Error updating kitchen:', error);
+        }
+      });
+
+      function closeEditForm() {
+        document.getElementById('editFormModal').style.display = 'none';
+      }
+
+      function clearFormFields() {
+        document.getElementById('editId').value = '';
+        document.getElementById('editName').value = '';
+        document.getElementById('editPrice').value = '';
+      }
+  </script>
+</body>
+</html>

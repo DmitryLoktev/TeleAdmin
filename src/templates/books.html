@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 12px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 50px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #006400;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 24px;
+            transition: background-color 0.3s ease;
+            border: 2px solid black;
+        }
+
+        .button:hover {
+            background-color: #228B22;
+        }
+
+        /* Styling for the cancel reservation button */
+        button {
+            padding: 8px 16px;
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="button">Главное меню</a>
+    <h1>Список броней:</h1>
+    <table>
+        <tr>
+            <th>Place</th>
+            <th>Quantity</th>
+            <th>Name</th>
+            <th>Telegram</th>
+            <th>Phone</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Change Status</th>
+        </tr>
+        {% for row in table_data %}
+        <tr>
+            <td><b>{{ row.pub }}</b></td>
+            <td>{{ row.quantity }} чел.</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.tg_link }}</td>
+            <td>{{ row.phone }}</td>
+            <td>{{ row.date }}, {{ row.time }}</td>
+            <td>{{ row.wish }}</td>
+            <td>
+                <button onclick="cancelReservation('{{ row.id }}')">Бронь больше не актуальна</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+        async function cancelReservation(id) {
+            try {
+                const response = await fetch(`/books/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    console.log(`Бронь с ID ${id} больше не актуальна`);
+                    // Reload the page
+                    location.reload();
+                } else {
+                    console.error('Ошибка при отмене брони');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
+    </script>
+</body>
+</html>

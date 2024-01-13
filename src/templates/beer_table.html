@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if pub == "Moskovskaya" %}
+        <title>Тапборд. Московская. </title>
+        <h1>Тапборд бара на Московской:</h1>
+    {% elif pub == "Michurina" %}
+        <title>Тапборд. Мичурина. </title>
+        <h1>Тапборд бара на Мичурина:</h1>
+    {% else %}
+        <title>Default Title</title>
+    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/modal_window.css') }}">
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Brewery</th>
+            <th>ABV</th>
+            <th>Style</th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+        {% for row in table_data %}
+        <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.brewery }}</td>
+            <td>{{ row.abv }}</td>
+            <td>{{ row.style }}</td>
+            <td>{{ row.price }}</td>
+            <td>
+                <button class="edit-button" onclick="showEditForm({{ row.id }}, '{{ row.name }}', '{{ row.brewery }}', '{{ row.abv }}', '{{ row.style }}', '{{ row.price }}')">Edit</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div id="editFormModal" style="display: none;">
+        <h2><b>Update Beer Menu</b></h2>
+        <form id="editForm">
+            <input type="hidden" id="editId" name="editId">
+            <label for="editName"><b>Name:</b></label><br>
+            <input type="text" id="editName" name="editName"><br>
+            <label for="editBrewery"><b>Brewery:</b></label><br>
+            <input type="text" id="editBrewery" name="editBrewery"><br><br>
+            <label for="editABV"><b>ABV:</b></label><br>
+            <input type="text" id="editABV" name="editABV"><br><br>
+            <label for="editStyle"><b>Style:</b></label><br>
+            <input type="text" id="editStyle" name="editStyle"><br><br>
+            <label for="editPrice"><b>Price:</b></label><br>
+            <input type="text" id="editPrice" name="editPrice"><br><br>
+            <button type="submit">Update</button>
+            <button type="button" class="cancel-button" onclick="closeEditForm()">Cancel</button>
+        </form>
+    </div>
+    <div id="pubValue" data-pub="{{ pub }}"></div>
+
+
+    <a href="/" class="go-to-main-button">Go to Main</a>
+
+    <!-- Скрипт для отправки формы -->
+    <script>
+
+
+        const pubValue = document.getElementById('pubValue');
+        const pub = pubValue.dataset.pub;
+
+        function showAddForm() {
+          clearFormFields();
+          document.getElementById('editFormModal').style.display = 'block';
+        }
+
+        // Функция для отображения модального окна редактирования
+        function showEditForm(id, name, brewery, abv, style, price) {
+          document.getElementById('editId').value = id;
+          document.getElementById('editName').value = name;
+          document.getElementById('editBrewery').value = brewery;
+          document.getElementById('editABV').value = abv;
+          document.getElementById('editStyle').value = style;
+          document.getElementById('editPrice').value = price;
+          document.getElementById('editFormModal').style.display = 'block';
+        }
+
+        // Обработчик события для отправки данных на сервер при редактировании или добавлении пива
+        document.getElementById('editForm').addEventListener('submit', async function(event) {
+          event.preventDefault();
+          const form = document.getElementById('editForm');
+          const id = form.elements.editId.value;
+          const name = form.elements.editName.value;
+          const brewery = form.elements.editBrewery.value;
+          const abv = form.elements.editABV.value;
+          const style = form.elements.editStyle.value;
+          const price = form.elements.editPrice.value;
+          try {
+            const response = await fetch(`/beer/table/${pub}/${id}?name=${encodeURIComponent(name)}&brewery=${encodeURIComponent(brewery)}&abv=${encodeURIComponent(abv)}&style=${encodeURIComponent(style)}&price=${encodeURIComponent(price)}`, {
+              method: 'PUT'
+            });
+
+            if (response.ok) {
+              window.location.reload(); // Обновить страницу после успешного добавления/обновления
+            } else {
+              console.error(`Failed to ${id ? 'update' : 'add'} beer:`, response.status);
+            }
+          } catch (error) {
+            console.error('Error updating beer:', error);
+          }
+        });
+
+        function closeEditForm() {
+          document.getElementById('editFormModal').style.display = 'none';
+        }
+
+        function clearFormFields() {
+          document.getElementById('editId').value = '';
+          document.getElementById('editName').value = '';
+          document.getElementById('editBrewery').value = '';
+          document.getElementById('editABV').value = '';
+          document.getElementById('editStyle').value = '';
+          document.getElementById('editPrice').value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+.edit-button {
+  background-color: #196f1c; /* Зеленый цвет */
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 120px;
+  margin-bottom: 5px;
+  margin-right: 5px; /* Добавленный отступ справа */
+}
+
+.edit-button:hover {
+  background-color: #45a049; /* Цвет при наведении */
+}
+
+.delete-button {
+  /* Стили для кнопки "Удалить" */
+  background-color: #a53b28; /* Красный цвет, ассоциируемый с опасностью */
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 120px;
+  margin-bottom: 5px;
+  margin-right: 5px; /* Добавленный отступ справа */
+}
+
+.delete-button:hover {
+  background-color: #D32F2F; /* Цвет при наведении */
+}
+
+.go-to-main-button {
+  display: inline-block;
+  padding: 15px 50px;
+  position: absolute;
+  top: 10px; /* отступ от верхнего края */
+  right: 10px; /* отступ от правого края */
+  background-color: #006400;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 24px;
+  transition: background-color 0.3s ease;
+  border: 2px solid black;
+  align-self: flex-end; /* Расположили вправо */
+}
+
+.go-to-main-button:hover {
+  background-color: #228B22;
+}
+
+
+.add-dishes-button {
+  background-color: #4CAF50; /* Зеленый цвет */
+  border: 2px solid #4CAF50; /* Обводка */
+  color: white;
+  padding: 8px 14px; /* Небольшие отступы */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; /* Отступ от таблицы */
+}
+
+.add-dishes-button:hover {
+  background-color: #45a049; /* Цвет при наведении */
+  border-color: #45a049; /* Цвет обводки при наведении */
+}
+
+    #editFormModal button {
+        padding: 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 5px;
+        border: 1px solid black;
+    }
+
+    #editFormModal button[type="submit"] {
+        background-color: #196f1c;
+        border: none;
+        color: white;
+    }
+
+    #editFormModal button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    .cancel-button {
+        background-color: #a53b28;
+        border: none;
+        color: white;
+        margin-bottom: 5px;
+    }
+
+    .cancel-button:hover {
+        background-color: #D32F2F;
+    }
+</style>

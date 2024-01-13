@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Stock Management</title>
+    <h1>Stock Management</h1>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/modal_window.css') }}">
+</head>
+<body>
+     <table>
+        <thead>
+            <tr>
+                <th>Num</th>
+                <th>Style</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in table_data %}
+                <tr>
+                    <td>{{ item.num }}</td>
+                    <td>{{ item.style }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>
+                        <!-- Кнопки для редактирования и удаления записи -->
+                       <button class="edit-button" onclick="showEditForm({{ item.id }}, '{{ item.num }}', '{{ item.style }}', '{{ item.name }}', {{ item.quantity }})">Edit</button>
+                        <button class="delete-button" onclick="deleteStockItem({{ item.id }})">Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<div id="editFormModal" style="display: none;">
+    <h2><b>Update Stock Item</b></h2>
+    <form id="editForm">
+        <input type="hidden" id="editId" name="editId">
+                <input type="hidden" id="editNum" name="editNum"> <!-- Скрытое поле для передачи выбранного числа -->
+            <label for="editName"><b>Name:</b></label><br>
+            <input type="text" id="editName" name="editName"><br>
+            <label for="editStyle"><b>Style:</b></label><br>
+            <input type="text" id="editStyle" name="editStyle" required autocomplete="off" list="numList"><br>
+            <datalist id="numList">
+
+                <option value="APA">
+                <option value="IPA">
+                <option value="NEIPA/Milkshake IPA">
+                <option value="DIPA">
+                <option value="Oat.Stout">
+                <option value="Milk/Double Stout">
+                <option value="Imp.Stout">
+                <option value="Lager">
+                <option value="Weizen">
+                <option value="Sour Ale">
+                <option value="Cider">
+                <option value="Tomato Gose">
+                <option value="Soup Gose">
+                <option value="Gose">
+                <option value="Other">
+                <option value="Mead">
+                <option value="Pale ale">
+                <option value="Cider">
+            </datalist>
+            <label for="editQuantity"><b>Quantity:</b></label><br>
+            <input type="text" id="editQuantity" name="editQuantity"><br><br>
+        <label><b>Num:</b></label><br>
+        <div id="numberButtons">
+            <!-- Кнопки для выбора чисел от 1 до 15 -->
+            <button type="button" onclick="selectNumber(1)" data-number="1">1 (Imperial Stout, Barleywine)</button>
+            <button type="button" onclick="selectNumber(6)" data-number="6">6 (Oatmeal Stout)</button>
+            <button type="button" onclick="selectNumber(11)" data-number="11">11 (Gose, Ale)</button>
+
+            <button type="button" onclick="selectNumber(2)" data-number="2">2 (DIPA)</button>
+            <button type="button" onclick="selectNumber(7)" data-number="7">7 (NEIPA, Milkshake IPA)</button>
+            <button type="button" onclick="selectNumber(12)" data-number="12">12 (Tomato/Soup Gose)</button>
+
+            <button type="button" onclick="selectNumber(3)" data-number="3">3 (Free Tap)</button>
+            <button type="button" onclick="selectNumber(8)" data-number="8">8 (Double Stout)</button>
+            <button type="button" onclick="selectNumber(13)"data-number="13">13 (Sour Ale, Fruit Beer)</button>
+
+            <button type="button" onclick="selectNumber(4)" data-number="4">4 (Lager)</button>
+            <button type="button" onclick="selectNumber(9)" data-number="9">9 (Weizen)</button>
+            <button type="button" onclick="selectNumber(14)" data-number="14">14 (Cider, Mead)</button>
+            <button type="button" onclick="selectNumber(5)" data-number="5">5 (APA, Pale Ale)</button>
+            <button type="button" onclick="selectNumber(10)" data-number="10">10 (AIPA)</button>
+            <button type="button" onclick="selectNumber(15)" data-number="15">15 (Cider, Mead)</button>
+        </div>
+
+            <button type="submit">Update</button>
+            <button type="button" class="cancel-button" onclick="closeEditForm()">Cancel</button>
+        </form>
+    </div>
+    <a href="/" class="go-to-main-button">Go to Main</a>
+    <button class="add-dishes-button" onclick="showAddForm()"> + Add Stock Item</button>
+
+
+    <!-- Скрипт для отправки формы -->
+<script>
+    function selectNumber(number) {
+        document.getElementById('editNum').value = number;
+
+        // Удаляем класс выбранной кнопки у всех кнопок
+        var buttons = document.querySelectorAll('#numberButtons button');
+        buttons.forEach(function(btn) {
+            btn.classList.remove('selected');
+        });
+
+        // Добавляем класс выбранной кнопке
+        var selectedButton = document.querySelector(`#numberButtons button[data-number="${number}"]`);
+        if (selectedButton) {
+            selectedButton.classList.add('selected');
+        }
+    }
+
+    // Функция для удаления записи со склада
+    async function deleteStockItem(itemId) {
+        try {
+            const response = await fetch(`/stock/${itemId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                window.location.reload(); // Обновить страницу после успешного удаления
+            } else {
+                console.error('Failed to delete stock item:', response.status);
+            }
+        } catch (error) {
+            console.error('Error deleting stock item:', error);
+        }
+    }
+
+    // Функция для отображения модального окна для добавления новых записей
+    function showAddForm() {
+        clearFormFields();
+        document.getElementById('editFormModal').style.display = 'block';
+    }
+
+    // Функция для отображения модального окна редактирования
+    function showEditForm(id, num, style, name, quantity) {
+        document.getElementById('editId').value = id;
+        document.getElementById('editNum').value = num;
+        document.getElementById('editStyle').value = style;
+        document.getElementById('editName').value = name;
+        document.getElementById('editQuantity').value = quantity;
+        document.getElementById('editFormModal').style.display = 'block';
+    }
+
+    // Обработчик события для отправки данных на сервер при редактировании или добавлении
+    document.getElementById('editForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const form = document.getElementById('editForm');
+        const id = form.elements.editId.value;
+        const num = form.elements.editNum.value;
+        const style = form.elements.editStyle.value;
+        const name = form.elements.editName.value;
+        const quantity = form.elements.editQuantity.value;
+
+        try {
+            const response = await fetch(`/stock/${id}?num=${encodeURIComponent(num)}&style=${encodeURIComponent(style)}&name=${encodeURIComponent(name)}&quantity=${encodeURIComponent(quantity)}`, {
+                method: id ? 'PUT' : 'POST' // Выбор метода в зависимости от наличия ID
+            });
+
+            if (response.ok) {
+                window.location.reload(); // Обновить страницу после успешного добавления/обновления
+            } else {
+                console.error(`Failed to ${id ? 'update' : 'add'} stock item:`, response.status);
+            }
+        } catch (error) {
+            console.error('Error updating stock item:', error);
+        }
+    });
+
+    function closeEditForm() {
+        document.getElementById('editFormModal').style.display = 'none';
+    }
+
+    function clearFormFields() {
+        document.getElementById('editId').value = '';
+        document.getElementById('editNum').value = '';
+        document.getElementById('editStyle').value = '';
+        document.getElementById('editName').value = '';
+        document.getElementById('editQuantity').value = '';
+    }
+</script>
+</body>
+</html>

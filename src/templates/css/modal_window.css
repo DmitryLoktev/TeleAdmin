@@ -1,0 +1,57 @@
+/* modal-styles.css */
+
+/* Стили для модального окна */
+#editFormModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Стили для формы в модальном окне */
+#editFormModal form {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  width: 50%;
+  border-radius: 5px;
+}
+
+#editFormModal h2 {
+  text-align: center;
+}
+
+#editFormModal label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#editFormModal input[type="text"] {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+/* Стили для кнопок в модальном окне */
+#editFormModal button {
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 32%;
+  margin-bottom: 15px; /* Расстояние между кнопками */
+  border: 1px solid black; /* Тонкая черная обводка */
+}
+
+#numberButtons button.selected {
+    background-color: lightblue;
+    /* Другие стили для выбранной кнопки */
+}

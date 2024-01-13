@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главное меню</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+            flex-direction: column; /* Располагаем элементы по вертикали */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: -200px; /* Увеличили отрицательный отступ для поднятия заголовка выше */
+        }
+
+        .button {
+            display: inline-block;
+            width: 400px; /* Задали новую ширину в 70% больше */
+            height: 85px; /* Задали новую высоту в 70% больше */
+            margin-top: 20px;
+            background-color: #006400;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 24px;
+            transition: background-color 0.3s ease;
+            border: 2px solid black;
+            text-align: center; /* Выровняли текст по центру */
+            line-height: 85px; /* Выровняли текст по вертикали */
+        }
+
+        .button-moskovskaya {
+            margin-left: 0; /* Сбросили левый отступ для первой кнопки */
+        }
+
+        .button-michurina {
+            background-color: #F5FFFA; /* Цвет для второй кнопки */
+            color: #006400; /* Цвет текста для второй кнопки */
+        }
+
+        .button:hover {
+            background-color: #228B22;
+        }
+
+        .button-michurina:hover {
+            background-color: #F5F5F5; /* Цвет при наведении для второй кнопки */
+        }
+    </style>
+</head>
+<body>
+    <h1>Доброго дня, это административная панель для телеграм-бота баров "Декабрист"!</h1>
+    <a href="{{ url_for('get_beer_table', pub='Moskovskaya') }}" class="button button-moskovskaya">Доска на Московской</a>
+    <a href="{{ url_for('get_beer_table', pub='Michurina') }}" class="button button-michurina">Доска на Мичурина</a>
+    <a href="{{ url_for('get_bottled_beer') }}" class="button button-moskovskaya">Подборка недели</a>
+    <a href="{{ url_for('kitchen') }}" class="button button-michurina">Кухня Мичурина</a>
+    <a href="{{ url_for('get_books') }}" class="button button-moskovskaya">Бронирования</a>
+    <a href="{{ url_for('get_users_unique') }}" class="button button-michurina">Список пользователей</a>
+    <a href="{{ url_for('get_stock') }}" class="button button-moskovskaya">Склад</a>
+
+    <!-- Новая кнопка для Michurina -->
+</body>
+</html>
